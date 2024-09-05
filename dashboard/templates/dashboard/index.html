@@ -1,0 +1,9 @@
+{% if activities %}
+    <ul>
+    {% for activity in activities %}
+        <li><a href="/dashboard/{{ activity.id }}/">{{ activity.activity_name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No activities defined.</p>
+{% endif %}
