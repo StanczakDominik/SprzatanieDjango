@@ -1,0 +1,18 @@
+th {
+    style: bold;
+}
+#priority {
+    color: orange;
+}
+
+#execution_count {
+    color: gray;
+}
+
+#last_execution_date {
+    color: green;
+}
+
+#expected_period {
+    color: blue;
+}
