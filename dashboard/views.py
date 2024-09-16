@@ -1,12 +1,10 @@
 from django.shortcuts import render
 
-from .models import Activity, Participant
+from .models import Activity, Participant, Execution
 
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
+from django.shortcuts import get_object_or_404
 from django.views import generic
-
 
 
 class IndexView(generic.ListView):
@@ -27,13 +25,6 @@ class DetailView(generic.DetailView):
         return context
 
 
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
-from django.urls import reverse
-
-from .models import Activity, Execution, Participant
-
-
 # ...
 def do(request, activity_id):
     activity = get_object_or_404(Activity, pk=activity_id)
@@ -50,7 +41,7 @@ def do(request, activity_id):
             },
         )
     else:
-        execution = Execution(executed_by = participant, activity = activity)
+        execution = Execution(executed_by=participant, activity=activity)
         execution.save()
         # Always return an HttpResponseRedirect after successfully dealing
         # with POST data. This prevents data from being posted twice if a

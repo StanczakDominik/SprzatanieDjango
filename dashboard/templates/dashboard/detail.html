@@ -6,11 +6,11 @@
 <p>
 Started {{ activity.date_created }}, expected to do every {{ activity.expected_period }}
 </p>
-<ul> 
-{% for execution in activity.execution_set.all %} 
-    <li> Done {{ execution.execution_date }} by {{ execution.executed_by }}</li> 
-{% endfor %} 
-</ul> 
+<ul>
+{% for execution in activity.execution_set.all %}
+    <li> Done {{ execution.execution_date }} by {{ execution.executed_by }}</li>
+{% endfor %}
+</ul>
 
 <form action="{% url 'dashboard:do' activity.id %}" method="post">
 

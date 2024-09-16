@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime, timezone
 
+
 class Activity(models.Model):
     activity_name = models.CharField(max_length=200)
     date_created = models.DateTimeField("date created", auto_now_add=True)
@@ -9,7 +10,7 @@ class Activity(models.Model):
     @property
     def last_entry(self):
         try:
-            return self.execution_set.order_by('-id')[0]
+            return self.execution_set.order_by("-id")[0]
         except IndexError:
             return None
 
@@ -18,7 +19,6 @@ class Activity(models.Model):
 
     @property
     def priority(self):
-
         now = datetime.now(timezone.utc)
 
         last_entry = self.last_entry
@@ -29,18 +29,18 @@ class Activity(models.Model):
         else:
             return 2137
 
+
 class Participant(models.Model):
     participant_name = models.CharField(max_length=200)
 
     def __str__(self, *args, **kwargs):
         return self.participant_name
 
+
 class Execution(models.Model):
     execution_date = models.DateTimeField("date done", auto_now_add=True)
-    executed_by = models.ForeignKey(Participant, on_delete = models.CASCADE)
-    activity = models.ForeignKey(Activity, on_delete = models.CASCADE)
-
+    executed_by = models.ForeignKey(Participant, on_delete=models.CASCADE)
+    activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
 
     def __str__(self, *args, **kwargs):
         return f"{self.activity.activity_name} done at {self.execution_date.strftime("%Y-%m-%d")} by {self.executed_by.participant_name}"
-

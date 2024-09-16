@@ -5,36 +5,73 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Activity',
+            name="Activity",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('activity_name', models.CharField(max_length=200)),
-                ('date_created', models.DateTimeField(verbose_name='date created')),
-                ('expected_period', models.DurationField(verbose_name='expected period')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("activity_name", models.CharField(max_length=200)),
+                ("date_created", models.DateTimeField(verbose_name="date created")),
+                (
+                    "expected_period",
+                    models.DurationField(verbose_name="expected period"),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Participant',
+            name="Participant",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('participant_name', models.CharField(max_length=200)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("participant_name", models.CharField(max_length=200)),
             ],
         ),
         migrations.CreateModel(
-            name='Execution',
+            name="Execution",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('execution_date', models.DateTimeField(verbose_name='date done')),
-                ('activity', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dashboard.activity')),
-                ('executed_by', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='dashboard.participant')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("execution_date", models.DateTimeField(verbose_name="date done")),
+                (
+                    "activity",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="dashboard.activity",
+                    ),
+                ),
+                (
+                    "executed_by",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="dashboard.participant",
+                    ),
+                ),
             ],
         ),
     ]

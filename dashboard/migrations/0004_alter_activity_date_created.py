@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('dashboard', '0003_alter_activity_date_created'),
+        ("dashboard", "0003_alter_activity_date_created"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='activity',
-            name='date_created',
-            field=models.DateTimeField(auto_now_add=True, verbose_name='date created'),
+            model_name="activity",
+            name="date_created",
+            field=models.DateTimeField(auto_now_add=True, verbose_name="date created"),
         ),
     ]

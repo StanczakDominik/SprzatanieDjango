@@ -5,15 +5,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('dashboard', '0002_alter_activity_date_created'),
+        ("dashboard", "0002_alter_activity_date_created"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='activity',
-            name='date_created',
-            field=models.DateTimeField(default=datetime.datetime.now, verbose_name='date created'),
+            model_name="activity",
+            name="date_created",
+            field=models.DateTimeField(
+                default=datetime.datetime.now, verbose_name="date created"
+            ),
         ),
     ]
