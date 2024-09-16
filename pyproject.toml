@@ -52,6 +52,9 @@ branch = true
 parallel = true
 omit = [
   "dashboard/__about__.py",
+  "sprzatanie/asgi.py",
+  "sprzatanie/wsgi.py",
+  "sprzatanie/urls.py"
 ]
 
 [tool.coverage.paths]
@@ -64,6 +67,9 @@ exclude_lines = [
   "no cov",
   "if __name__ == .__main__.:",
   "if TYPE_CHECKING:",
+]
+omit = [
+  "sprzatanie/urls.py"
 ]
 
 [tool.pytest.ini_options]
