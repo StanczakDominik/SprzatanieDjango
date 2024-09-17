@@ -25,14 +25,11 @@ class DetailView(generic.DetailView):
         return context
 
 
-# ...
 def do(request, activity_id):
     activity = get_object_or_404(Activity, pk=activity_id)
-    print(request)
     try:
         participant = Participant.objects.get(pk=request.POST["participant"])
     except (KeyError, Participant.DoesNotExist):
-        # Redisplay the question voting form.
         return render(
             request,
             "dashboard/detail.html",

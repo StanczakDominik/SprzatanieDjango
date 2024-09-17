@@ -1,11 +1,12 @@
 from django.test import TestCase
+from django.urls import reverse
 from dashboard.models import Activity, Participant, Execution
-from datetime import timedelta, datetime
+from datetime import timedelta
 
 
 class BasicTestCase(TestCase):
     def setUp(self):
-        activity = Activity.objects.create(
+        Activity.objects.create(
             activity_name="test activity", expected_period=timedelta(days=3)
         )
 
@@ -20,6 +21,16 @@ class BasicTestCase(TestCase):
     def test_activity_empty_priority(self):
         activity = Activity.objects.get(activity_name="test activity")
         self.assertEqual(activity.priority, 2137)
+
+    def test_activity_appears_on_dashboard(self):
+        response = self.client.get(reverse("dashboard:index"))
+        self.assertEqual(len(response.context["activities"]), 1)
+
+    def test_detail_view(self):
+        response = self.client.get(reverse("dashboard:detail", args=[1]))
+        self.assertEqual(response.context["activity"].activity_name, "test activity")
+        self.assertEqual(len(response.context["participants"]), 0)
+
 
 class OneActionTestCase(TestCase):
     def setUp(self):
@@ -42,3 +53,20 @@ class OneActionTestCase(TestCase):
         execution = Execution.objects.get(id=1)
         self.assertRegex(str(execution), r"test activity done at .* by user")
 
+    def test_detail_view(self):
+        response = self.client.get(reverse("dashboard:detail", args=[1]))
+        self.assertEqual(response.context["activity"].activity_name, "test activity")
+        self.assertEqual(response.context["participants"][0].participant_name, "user")
+
+
+class TestIndexView(TestCase):
+    def test_empty_dashboard(self):
+        response = self.client.get(reverse("dashboard:index"))
+        self.assertRegex(response.content, b"No activities defined.")
+
+
+# TODO
+# class TestExecuteActivity(TestCase):
+#     def test_empty_dashboard(self):
+#         response = self.client.get(reverse("dashboard:index"))
+#         self.assertRegex(response.content, b"No activities defined.")
