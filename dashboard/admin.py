@@ -1,7 +1,6 @@
 from django.contrib import admin
 
-from .models import Activity, Participant, Execution
+from .models import Activity, Execution
 
 admin.site.register(Activity)
-admin.site.register(Participant)
 admin.site.register(Execution)

@@ -1,13 +1,7 @@
 from django.db import models
 from datetime import datetime, timezone
 from typing import Optional
-
-
-class Participant(models.Model):
-    participant_name = models.CharField(max_length=200)
-
-    def __str__(self, *args, **kwargs):
-        return self.participant_name
+from django.contrib.auth.models import User
 
 
 class Activity(models.Model):
@@ -37,7 +31,7 @@ class Activity(models.Model):
         else:
             return 2137
 
-    def execute(self, participant: Participant, date: Optional[datetime] = None):
+    def execute(self, participant: User, date: Optional[datetime] = None):
         Execution.objects.create(
             execution_date=date, executed_by=participant, activity=self
         )
@@ -45,8 +39,8 @@ class Activity(models.Model):
 
 class Execution(models.Model):
     execution_date = models.DateTimeField("date done", auto_now_add=True)
-    executed_by = models.ForeignKey(Participant, on_delete=models.CASCADE)
+    executed_by = models.ForeignKey(User, on_delete=models.CASCADE)
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
 
     def __str__(self, *args, **kwargs):
-        return f"{self.activity.activity_name} done at {self.execution_date.strftime("%Y-%m-%d")} by {self.executed_by.participant_name}"
+        return f"{self.activity.activity_name} done at {self.execution_date.strftime("%Y-%m-%d")} by {self.executed_by.first_name}"

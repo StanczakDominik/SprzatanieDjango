@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.urls import reverse
-from dashboard.models import Activity, Participant, Execution
+from dashboard.models import Activity, User, Execution
 from datetime import timedelta
 
 
@@ -37,12 +37,8 @@ class OneActionTestCase(TestCase):
         activity = Activity.objects.create(
             activity_name="test activity", expected_period=timedelta(days=3)
         )
-        participant = Participant.objects.create(participant_name="user")
+        participant = User.objects.create(username="user", password="correcthorsebatterystaple")
         activity.execute(participant)
-
-    def test_participant_name(self):
-        participant = Participant.objects.get(participant_name="user")
-        self.assertEqual(str(participant), "user")
 
     def test_priority(self):
         activity = Activity.objects.get(activity_name="test activity")
@@ -70,7 +66,7 @@ class TestExecuteActivity(TestCase):
         activity = Activity.objects.create(
             activity_name="test activity", expected_period=timedelta(days=3)
         )
-        participant = Participant.objects.create(participant_name="user")
+        participant = User.objects.create(username="user", password="correcthorsebatterystaple")
         activity.execute(participant)
 
     def test_execute_activity(self):
