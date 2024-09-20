@@ -74,5 +74,5 @@ class TestExecuteActivity(TestCase):
         activity.execute(participant)
 
     def test_execute_activity(self):
-        fun = lambda: self.client.post("/dashboard/1/do", data = {"participant": 1})
+        fun = lambda: self.client.post("/dashboard/1/do", data={"participant": 1})
         fun()

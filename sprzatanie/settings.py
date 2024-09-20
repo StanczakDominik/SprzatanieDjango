@@ -141,3 +141,4 @@ if not TESTING:
         *MIDDLEWARE,
     ]
 
+LOGIN_REDIRECT_URL = "/dashboard"

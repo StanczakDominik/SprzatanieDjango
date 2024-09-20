@@ -30,6 +30,12 @@
     <p>No activities defined.</p>
 {% endif %}
 
+{% if user.is_authenticated %}
+<div>
+    Hi, {{ user.first_name }}!
+</div>
+{%endif %}
+
 {% comment %}
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━┓
 ┃                     Co? ┃ Okres ┃ Ostatnio   ┃ Ile wpisów ┃ Priorytet ┃

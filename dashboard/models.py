@@ -2,6 +2,7 @@ from django.db import models
 from datetime import datetime, timezone
 from typing import Optional
 
+
 class Participant(models.Model):
     participant_name = models.CharField(max_length=200)
 
@@ -35,13 +36,11 @@ class Activity(models.Model):
             return (now - last_date) / self.expected_period
         else:
             return 2137
-    
+
     def execute(self, participant: Participant, date: Optional[datetime] = None):
-        Execution.objects.create(execution_date = date, executed_by = participant, activity = self)
-
-
-
-
+        Execution.objects.create(
+            execution_date=date, executed_by=participant, activity=self
+        )
 
 
 class Execution(models.Model):
