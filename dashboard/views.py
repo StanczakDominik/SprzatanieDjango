@@ -25,7 +25,7 @@ class DetailView(generic.DetailView):
         return context
 
 
-def do(request, activity_id):
+def execute_activity(request, activity_id):
     activity = get_object_or_404(Activity, pk=activity_id)
     try:
         participant = Participant.objects.get(pk=request.POST["participant"])

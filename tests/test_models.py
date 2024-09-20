@@ -65,8 +65,14 @@ class TestIndexView(TestCase):
         self.assertRegex(response.content, b"No activities defined.")
 
 
-# TODO
-# class TestExecuteActivity(TestCase):
-#     def test_empty_dashboard(self):
-#         response = self.client.get(reverse("dashboard:index"))
-#         self.assertRegex(response.content, b"No activities defined.")
+class TestExecuteActivity(TestCase):
+    def setUp(self):
+        activity = Activity.objects.create(
+            activity_name="test activity", expected_period=timedelta(days=3)
+        )
+        participant = Participant.objects.create(participant_name="user")
+        activity.execute(participant)
+
+    def test_execute_activity(self):
+        fun = lambda: self.client.post("/dashboard/1/do", data = {"participant": 1})
+        fun()
