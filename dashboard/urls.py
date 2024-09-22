@@ -8,7 +8,7 @@ urlpatterns = [
     path("", views.IndexView.as_view(), name="index"),
     path("<int:pk>/", views.DetailView.as_view(), name="detail"),
     # path("<int:pk>/results/", views.ResultsView.as_view(), name="results"),
-    path("<int:activity_id>/do/", views.execute_activity, name="do"),
+    path("<int:activity_id>/do/", views.execute_activity, name="execute_activity"),
 ]
 
 if not settings.TESTING:

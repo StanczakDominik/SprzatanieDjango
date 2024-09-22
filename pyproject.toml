@@ -54,7 +54,8 @@ omit = [
   "dashboard/__about__.py",
   "sprzatanie/asgi.py",
   "sprzatanie/wsgi.py",
-  "sprzatanie/urls.py"
+  "sprzatanie/urls.py",
+  "sprzatanie/settings.py"
 ]
 
 [tool.coverage.paths]

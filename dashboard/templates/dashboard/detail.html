@@ -12,15 +12,8 @@ Started {{ activity.date_created }}, expected to do every {{ activity.expected_p
 {% endfor %}
 </ul>
 
-<form action="{% url 'dashboard:do' activity.id %}" method="post">
+<form action="{% url 'dashboard:execute_activity' activity.id %}" method="post">
 
 {% csrf_token %}
-<fieldset>
-    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-    {% for p in participants %}
-        <input type="radio" name="participant" id="participant{{ forloop.counter }}" value="{{ p.id }}">
-        <label for="participant{{ forloop.counter }}">{{ p.participant_name }}</label><br>
-    {% endfor %}
-</fieldset>
 <input type="submit" value="Do">
 </form>

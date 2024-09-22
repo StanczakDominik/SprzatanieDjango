@@ -9,6 +9,10 @@ class BasicTestCase(TestCase):
         Activity.objects.create(
             activity_name="test activity", expected_period=timedelta(days=3)
         )
+        User.objects.create_user(
+            username="testuser", first_name="user", password="2137"
+        )
+        self.client.login(username="testuser", password="2137")
 
     def test_activity_without_last_entry(self):
         activity = Activity.objects.get(activity_name="test activity")
@@ -36,10 +40,11 @@ class OneActionTestCase(TestCase):
         activity = Activity.objects.create(
             activity_name="test activity", expected_period=timedelta(days=3)
         )
-        participant = User.objects.create(
-            username="user", first_name="user", password="correcthorsebatterystaple"
+        user = User.objects.create_user(
+            username="testuser", first_name="user", password="2137"
         )
-        activity.execute(participant)
+        self.client.login(username="testuser", password="2137")
+        activity.execute(user)
 
     def test_priority(self):
         activity = Activity.objects.get(activity_name="test activity")
@@ -56,6 +61,12 @@ class OneActionTestCase(TestCase):
 
 
 class TestIndexView(TestCase):
+    def setUp(self):
+        User.objects.create_user(
+            username="testuser", first_name="user", password="2137"
+        )
+        self.client.login(username="testuser", password="2137")
+
     def test_empty_dashboard(self):
         response = self.client.get(reverse("dashboard:index"))
         self.assertRegex(response.content, b"No activities defined.")
@@ -63,15 +74,13 @@ class TestIndexView(TestCase):
 
 class TestExecuteActivity(TestCase):
     def setUp(self):
-        activity = Activity.objects.create(
+        Activity.objects.create(
             activity_name="test activity", expected_period=timedelta(days=3)
         )
-        participant = User.objects.create(
-            username="user", password="correcthorsebatterystaple"
+        User.objects.create_user(
+            username="testuser", first_name="user", password="2137"
         )
-        activity.execute(participant)
+        self.client.login(username="testuser", password="2137")
 
-    # # TODO test execute_activity... somehow
-    # def test_execute_activity(self):
-    #     fun = lambda: self.client.post("/dashboard/1/do", data={"participant": 1})
-    #     fun()
+    def test_execute_activity(self):
+        self.client.post(reverse("dashboard:execute_activity", args=(1,)))
