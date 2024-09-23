@@ -17,3 +17,5 @@ Started {{ activity.date_created }}, expected to do every {{ activity.expected_p
 {% csrf_token %}
 <input type="submit" value="Do">
 </form>
+
+<a href={% url 'dashboard:update_activity' activity.id %}>Edit</a>

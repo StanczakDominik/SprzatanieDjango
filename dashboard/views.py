@@ -33,3 +33,10 @@ class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
     fields = ["activity_name", "expected_period"]
     success_url = reverse_lazy("dashboard:index")
 
+class ActivityUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Activity
+    fields = ["activity_name", "expected_period"]
+
+    def get_success_url(self):
+        return reverse('dashboard:detail', args=[self.object.id])
+
