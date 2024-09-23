@@ -3,6 +3,11 @@
 <link rel="stylesheet" href="{% static 'dashboard/style.css' %}">
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 
+{% if user.is_authenticated %}
+<div>
+    Hi, {{ user.username }}!
+</div>
+
 {% if activities %}
     <table>
     <tr>
@@ -15,7 +20,7 @@
     {% for activity in activities %}
     <tr>
         <td id="activity_name">
-            <a href="/dashboard/{{ activity.id }}/">{{ activity.activity_name }}</a>
+            <a href="{% url 'dashboard:detail' activity.id %}">{{ activity.activity_name }}</a>
         </td>
         <td id="expected_period">
             {{ activity.expected_period.days }}d
@@ -30,27 +35,6 @@
     <p>No activities defined.</p>
 {% endif %}
 
-{% if user.is_authenticated %}
-<div>
-    Hi, {{ user.first_name }}!
-</div>
-{%endif %}
+<p><a href="{% url 'dashboard:create_activity' %}">Create an activity?</a>
 
-{% comment %}
-┏━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━━┳━━━━━━━━━━━┓
-┃                     Co? ┃ Okres ┃ Ostatnio   ┃ Ile wpisów ┃ Priorytet ┃
-┡━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━━╇━━━━━━━━━━━┩
-│        zmywanie do zera │ 1d    │ 2024-09-06 │ 333        │ 5.0       │
-│       podlewanie roślin │ 2d    │ 2024-09-08 │ 253        │ 1.5       │
-│                  śmieci │ 2d    │ 2024-09-08 │ 283        │ 1.5       │
-│           mycie toalety │ 4w    │ 2024-08-07 │ 29         │ 1.2       │
-│           mycie podłogi │ 6w    │ 2024-07-25 │ 25         │ 1.1       │
-│ czyszczenie elektroniki │ 6w    │ 2024-07-26 │ 19         │ 1.1       │
-│             mycie zlewu │ 4w    │ 2024-08-12 │ 27         │ 1.1       │
-│       zmycie ociekaczki │ 4w    │ 2024-08-13 │ 14         │ 1.0       │
-│     domestos do kibelka │ 4w    │ 2024-08-14 │ 28         │ 1.0       │
-│           mycie lodówki │ 52w   │ 2023-09-13 │ 4          │ 1.0       │
-│             mycie płyty │ 3d    │ 2024-09-08 │ 186        │ 1.0       │
-│      przecieranie blatu │ 1w    │ 2024-09-04 │ 90         │ 1.0       │
-└─────────────────────────┴───────┴────────────┴────────────┴───────────┘
-{% endcomment %}
+{%endif %}

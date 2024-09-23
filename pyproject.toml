@@ -25,7 +25,7 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-    "django","pytest","pytest-django", "pytest-cov", "django-debug-toolbar"
+    "django","pytest","pytest-django", "pytest-cov", "django-debug-toolbar", "pytest-watcher"
     ]
 
 [project.urls]

@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy, reverse
 
 
 class IndexView(LoginRequiredMixin, generic.ListView):
@@ -25,4 +26,10 @@ def execute_activity(request, activity_id):
     activity = get_object_or_404(Activity, pk=activity_id)
     execution = Execution(executed_by=request.user, activity=activity)
     execution.save()
-    return HttpResponseRedirect(f"/dashboard/{activity_id}")
+    return HttpResponseRedirect(reverse_lazy("dashboard:detail", args=[activity_id]))
+
+class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Activity
+    fields = ["activity_name", "expected_period"]
+    success_url = reverse_lazy("dashboard:index")
+
