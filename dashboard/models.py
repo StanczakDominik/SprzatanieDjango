@@ -39,8 +39,12 @@ class Activity(models.Model):
 
 class Execution(models.Model):
     execution_date = models.DateTimeField("date done", auto_now_add=True)
-    executed_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    executed_by = models.ForeignKey(
+        User, on_delete=models.CASCADE, blank=True, null=True
+    )
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
 
     def __str__(self, *args, **kwargs):
-        return f"{self.activity.activity_name} done at {self.execution_date.strftime("%Y-%m-%d")} by {self.executed_by.first_name}"
+        output = f"{self.activity.activity_name} done at {self.execution_date.strftime("%Y-%m-%d")}"
+        by = f" by {self.executed_by.first_name}" if self.executed_by else ""
+        return output + by

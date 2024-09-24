@@ -1,11 +1,14 @@
 from .models import Activity, Execution
+from datetime import timedelta
 
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
+from .forms import UploadFileForm
+import yaml
 
 
 class IndexView(LoginRequiredMixin, generic.ListView):
@@ -28,15 +31,86 @@ def execute_activity(request, activity_id):
     execution.save()
     return HttpResponseRedirect(reverse_lazy("dashboard:detail", args=[activity_id]))
 
+
 class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
     model = Activity
     fields = ["activity_name", "expected_period"]
     success_url = reverse_lazy("dashboard:index")
+
 
 class ActivityUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Activity
     fields = ["activity_name", "expected_period"]
 
     def get_success_url(self):
-        return reverse('dashboard:detail', args=[self.object.id])
+        return reverse("dashboard:detail", args=[self.object.id])
 
+
+class ExecutionCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Execution
+    fields = ["executed_by"]
+
+    def get_success_url(self):
+        return reverse("dashboard:detail", args=[self.object.activity.id])
+
+
+class ExecutionUpdateView(LoginRequiredMixin, generic.UpdateView):
+    model = Execution
+    fields = ["executed_by"]
+
+    def get_success_url(self):
+        return reverse("dashboard:detail", args=[self.object.activity.id])
+
+
+def parse_period(period):
+    if period.endswith("w"):
+        return timedelta(days=7 * int(period.strip("w")))
+    elif period.endswith("d"):
+        return timedelta(days=int(period.strip("d")))
+    else:
+        raise NotImplementedError
+
+
+def handle_uploaded_file(f):
+    d = yaml.load(f, Loader=yaml.FullLoader)
+    for activity_name, activity_dict in d.items():
+        activity_period = parse_period(activity_dict["period"])
+        if existing_activities := Activity.objects.filter(
+            activity_name=activity_name, expected_period=activity_period
+        ):
+            activity = existing_activities.get()
+            if activity.expected_period == activity_period:
+                pass
+            else:
+                breakpoint()
+        else:
+            activity = Activity(
+                activity_name=activity_name, expected_period=activity_period
+            )
+            activity.save()
+
+        executions = []
+        for date in activity_dict["dates"]:
+            if existing_executions := Execution.objects.filter(
+                activity=activity, execution_date=date
+            ):
+                print(existing_executions)
+                breakpoint()
+            else:
+                execution = Execution(
+                    execution_date=date, activity=activity, executed_by=None
+                )
+                executions.append(execution)
+
+        Execution.objects.bulk_create(executions)
+
+
+def upload_file(request):
+    if request.method == "POST":
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            handle_uploaded_file(request.FILES["file"])
+            return HttpResponseRedirect(reverse("dashboard:index"))
+    else:
+        form = UploadFileForm()
+    return render(request, "dashboard/upload.html", {"form": form})
