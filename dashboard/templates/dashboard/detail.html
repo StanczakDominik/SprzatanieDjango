@@ -6,16 +6,22 @@
 <p>
 Started {{ activity.date_created }}, expected to do every {{ activity.expected_period }}
 </p>
-<ul>
-{% for execution in activity.associated_executions_by_date %}
-<li> {{ execution }}  <a href="{% url 'dashboard:update_execution' execution.id %}">(edit)</a></li>
-{% endfor %}
-</ul>
-
-<form action="{% url 'dashboard:execute_activity' activity.id %}" method="post">
 
 {% csrf_token %}
 <input type="submit" value="Do">
 </form>
 
-<a href={% url 'dashboard:update_activity' activity.id %}>Edit</a>
+<ul>
+{% for execution in activity.associated_executions_by_date %}
+<li> {{ execution }}
+    <a href="{% url 'dashboard:update_execution' execution.id %}">(edit)</a>
+    <a href="{% url 'dashboard:delete_execution' execution.id %}">(delete)</a>
+</li>
+{% endfor %}
+</ul>
+
+<form action="{% url 'dashboard:execute_activity' activity.id %}" method="post">
+
+<p>
+<a href={% url 'dashboard:update_activity' activity.id %}>Edit</a> or <a href={% url 'dashboard:delete_activity' activity.id %}>delete</a> this activity?
+</p>

@@ -52,7 +52,23 @@ class ActivityUpdateView(LoginRequiredMixin, generic.UpdateView):
         return reverse("dashboard:detail", args=[self.object.id])
 
 
+class ActivityDeleteView(LoginRequiredMixin, generic.DeleteView):
+    model = Activity
+    fields = ["activity_name", "expected_period"]
+
+    def get_success_url(self):
+        return reverse("dashboard:index")
+
+
 class ExecutionCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Execution
+    fields = ["executed_by"]
+
+    def get_success_url(self):
+        return reverse("dashboard:detail", args=[self.object.activity.id])
+
+
+class ExecutionDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Execution
     fields = ["executed_by"]
 

@@ -15,6 +15,11 @@ urlpatterns = [
     ),
     path("activity/create", views.ActivityCreateView.as_view(), name="create_activity"),
     path(
+        "activity/<int:pk>/delete",
+        views.ActivityDeleteView.as_view(),
+        name="delete_activity",
+    ),
+    path(
         "activity/<int:pk>/update",
         views.ActivityUpdateView.as_view(),
         name="update_activity",
@@ -26,6 +31,11 @@ urlpatterns = [
         "execution/<int:pk>/update",
         views.ExecutionUpdateView.as_view(),
         name="update_execution",
+    ),
+    path(
+        "execution/<int:pk>/delete",
+        views.ExecutionDeleteView.as_view(),
+        name="delete_execution",
     ),
     path("yaml", views.upload_file, name="upload_yaml"),
 ]
