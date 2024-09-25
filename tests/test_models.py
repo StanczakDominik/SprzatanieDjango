@@ -49,7 +49,7 @@ class OneActionTestCase(TestCase):
     def test_priority(self):
         activity = Activity.objects.get(activity_name="test activity")
         self.assertLess(activity.priority, 1e-6)
-        self.assertGreater(activity.priority, 0)
+        self.assertEqual(activity.priority, 0)
 
     def test_execution_str(self):
         execution = Execution.objects.get(id=1)

@@ -1,12 +1,11 @@
 from django.db import models
-from datetime import datetime, timezone
-from typing import Optional
+from datetime import date
 from django.contrib.auth.models import User
 
 
 class Activity(models.Model):
     activity_name = models.CharField(max_length=200)
-    date_created = models.DateTimeField("date created", auto_now_add=True)
+    date_created = models.DateField("date created", default=date.today, null=False)
     expected_period = models.DurationField("expected period")
 
     @property
@@ -21,7 +20,7 @@ class Activity(models.Model):
 
     @property
     def priority(self):
-        now = datetime.now(timezone.utc)
+        now = date.today()
 
         last_entry = self.last_entry
 
@@ -31,14 +30,12 @@ class Activity(models.Model):
         else:
             return 2137
 
-    def execute(self, participant: User, date: Optional[datetime] = None):
-        Execution.objects.create(
-            execution_date=date, executed_by=participant, activity=self
-        )
+    def execute(self, participant: User):
+        Execution.objects.create(executed_by=participant, activity=self)
 
 
 class Execution(models.Model):
-    execution_date = models.DateTimeField("date done", auto_now_add=True)
+    execution_date = models.DateField("date done", default=date.today)
     executed_by = models.ForeignKey(
         User, on_delete=models.CASCADE, blank=True, null=True
     )
