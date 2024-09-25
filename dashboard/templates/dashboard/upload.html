@@ -1,10 +1,10 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'dashboard/style.css' %}">
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
-<h1>Create an activity</h1>
+<h1>Upload a YAML file</h1>
 
 <form method="post"  enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <input type="submit" value="Save">
+    <input type="submit" value=" Upload">
 </form>

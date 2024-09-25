@@ -44,6 +44,9 @@
     <p>No activities defined.</p>
 {% endif %}
 
-<p><a href="{% url 'dashboard:create_activity' %}">Create an activity?</a>
+<p>
+    <a href="{% url 'dashboard:create_activity' %}">Create an activity?</a>
+    <a href="{% url 'dashboard:upload_yaml' %}">Upload YAML?</a>
+    </p>
 
 {%endif %}

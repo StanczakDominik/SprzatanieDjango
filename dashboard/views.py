@@ -25,7 +25,7 @@ class IndexView(LoginRequiredMixin, generic.ListView):
         activities = sorted(
             activities, key=lambda activity: activity.priority, reverse=True
         )
-        activities = filter(lambda activity: activity.priority > cutoff, activities)
+        activities = filter(lambda activity: activity.priority >= cutoff, activities)
         return activities
 
 
