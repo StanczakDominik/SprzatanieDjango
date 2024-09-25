@@ -7,8 +7,8 @@
 Started {{ activity.date_created }}, expected to do every {{ activity.expected_period }}
 </p>
 <ul>
-{% for execution in activity.execution_set.all %}
-<li> Done {{ execution.execution_date }} by {{ execution.executed_by }} <a href="{% url 'dashboard:update_execution' execution.id %}">(edit)</a></li>
+{% for execution in activity.associated_executions_by_date %}
+<li> {{ execution }}  <a href="{% url 'dashboard:update_execution' execution.id %}">(edit)</a></li>
 {% endfor %}
 </ul>
 

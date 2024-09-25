@@ -16,7 +16,13 @@ class IndexView(LoginRequiredMixin, generic.ListView):
     context_object_name = "activities"
 
     def get_queryset(self):
-        return Activity.objects.order_by("-date_created")
+        activities = Activity.objects.order_by("-date_created")
+        activities = sorted(
+            activities, key=lambda activity: activity.priority, reverse=True
+        )
+        if False:  # TODO make this depend on a switch on the page
+            activities = filter(lambda activity: activity.priority < 1, activities)
+        return activities
 
 
 class DetailView(LoginRequiredMixin, generic.DetailView):
@@ -94,8 +100,7 @@ def handle_uploaded_file(f):
             if existing_executions := Execution.objects.filter(
                 activity=activity, execution_date=date
             ):
-                print(existing_executions)
-                breakpoint()
+                pass  # this is fine
             else:
                 execution = Execution(
                     execution_date=date, activity=activity, executed_by=None

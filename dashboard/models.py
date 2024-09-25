@@ -11,7 +11,7 @@ class Activity(models.Model):
     @property
     def last_entry(self):
         try:
-            return self.execution_set.order_by("-id")[0]
+            return self.associated_executions_by_date[0]
         except IndexError:
             return None
 
@@ -26,9 +26,13 @@ class Activity(models.Model):
 
         if last_entry:
             last_date = last_entry.execution_date
-            return (now - last_date) / self.expected_period
         else:
-            return 2137
+            last_date = self.date_created
+        return (now - last_date) / self.expected_period
+
+    @property
+    def associated_executions_by_date(self):
+        return self.execution_set.order_by("-execution_date")
 
     def execute(self, participant: User):
         Execution.objects.create(executed_by=participant, activity=self)
@@ -43,5 +47,10 @@ class Execution(models.Model):
 
     def __str__(self, *args, **kwargs):
         output = f"{self.activity.activity_name} done at {self.execution_date.strftime("%Y-%m-%d")}"
-        by = f" by {self.executed_by.first_name}" if self.executed_by else ""
+        if self.executed_by is None:
+            by = ""
+        elif self.executed_by.first_name:
+            by = f" by {self.executed_by.first_name}"
+        else:
+            f" by {self.executed_by.nickname}"
         return output + by
