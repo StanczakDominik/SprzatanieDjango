@@ -15,13 +15,17 @@ class IndexView(LoginRequiredMixin, generic.ListView):
     template_name = "dashboard/index.html"
     context_object_name = "activities"
 
-    def get_queryset(self):
+    def get_queryset(self, *args, **kwargs):
+        try:
+            cutoff = float(self.request.GET.get("priority", 1))
+        except ValueError:
+            cutoff = 1.0
+
         activities = Activity.objects.order_by("-date_created")
         activities = sorted(
             activities, key=lambda activity: activity.priority, reverse=True
         )
-        if False:  # TODO make this depend on a switch on the page
-            activities = filter(lambda activity: activity.priority < 1, activities)
+        activities = filter(lambda activity: activity.priority > cutoff, activities)
         return activities
 
 
@@ -113,11 +117,7 @@ def handle_uploaded_file(f):
 
         executions = []
         for date in activity_dict["dates"]:
-            if existing_executions := Execution.objects.filter(
-                activity=activity, execution_date=date
-            ):
-                pass  # this is fine
-            else:
+            if not Execution.objects.filter(activity=activity, execution_date=date):
                 execution = Execution(
                     execution_date=date, activity=activity, executed_by=None
                 )
