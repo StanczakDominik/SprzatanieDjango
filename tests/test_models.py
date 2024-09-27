@@ -37,6 +37,9 @@ class BasicTestCase(TestCase):
         response = self.client.get(reverse("dashboard:detail", args=[1]))
         self.assertEqual(response.context["activity"].activity_name, "test activity")
 
+    def test_activity_update(self):
+        raise NotImplementedError
+
 
 class OneActionTestCase(TestCase):
     def setUp(self):
@@ -61,6 +64,9 @@ class OneActionTestCase(TestCase):
     def test_detail_view(self):
         response = self.client.get(reverse("dashboard:detail", args=[1]))
         self.assertEqual(response.context["activity"].activity_name, "test activity")
+
+    def test_execution_update(self):
+        raise NotImplementedError
 
 
 class TestIndexView(TestCase):
