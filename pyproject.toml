@@ -25,7 +25,12 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-    "django","pyyaml", "python-dotenv"
+    "django",
+    "pyyaml",
+    "python-dotenv",
+    "dj-database-url",
+    "gunicorn", # TODO should this be defined here?
+    "whitenoise",
     ]
 
 [project.urls]
@@ -38,6 +43,10 @@ path = "dashboard/__about__.py"
 
 [tool.hatch.envs.default]
 installer = "uv"
+
+[tool.hatch.envs.default.env-vars]
+DJANGO_DEBUG = 'False'
+
 
 [tool.hatch.envs.types]
 extra-dependencies = [
@@ -54,6 +63,9 @@ extra-dependencies = [
 [tool.hatch.envs.dev.scripts]
 serve = "python manage.py runserver"
 test = "ptw . --delay 0.2 -vv --cov"
+
+[tool.hatch.envs.dev.env-vars]
+DJANGO_DEBUG = 'True'
 
 [tool.coverage.run]
 source_pkgs = ["sprzatanie", "dashboard", "tests"]
