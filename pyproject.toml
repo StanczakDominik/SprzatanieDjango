@@ -25,7 +25,7 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dependencies = [
-    "django","pytest","pytest-django", "pytest-cov", "django-debug-toolbar", "pytest-watcher", "pyyaml"
+    "django","pyyaml", "python-dotenv"
     ]
 
 [project.urls]
@@ -45,6 +45,15 @@ extra-dependencies = [
 ]
 [tool.hatch.envs.types.scripts]
 check = "mypy --install-types --non-interactive {args:sprzatanie dashboard tests}"
+
+[tool.hatch.envs.dev]
+extra-dependencies = [
+    "pytest","pytest-django", "pytest-cov", "django-debug-toolbar", "pytest-watcher"
+]
+
+[tool.hatch.envs.dev.scripts]
+serve = "python manage.py runserver"
+test = "ptw . --delay 0.2 -vv --cov"
 
 [tool.coverage.run]
 source_pkgs = ["sprzatanie", "dashboard", "tests"]
