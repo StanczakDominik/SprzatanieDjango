@@ -22,10 +22,12 @@ class IndexView(LoginRequiredMixin, generic.ListView):
             cutoff = 1.0
 
         activities = Activity.objects.order_by("-date_created")
+        activities = list(
+            filter(lambda activity: activity.priority >= cutoff, activities)
+        )
         activities = sorted(
             activities, key=lambda activity: activity.priority, reverse=True
         )
-        activities = filter(lambda activity: activity.priority >= cutoff, activities)
         return activities
 
 
