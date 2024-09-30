@@ -62,7 +62,8 @@ extra-dependencies = [
 
 [tool.hatch.envs.dev.scripts]
 serve = "python manage.py runserver"
-test = "ptw . --delay 0.2 -vv --cov"
+test = "pytest -vv --cov"
+test-watch = "ptw . --delay 0.2 -vv --cov"
 coverage = "ptw .coverage --runner coverage html"
 
 [tool.hatch.envs.dev.env-vars]
