@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-import sys
 import os
 from dotenv import load_dotenv
 
@@ -153,9 +152,7 @@ INTERNAL_IPS = [
     "127.0.0.1",
     # ...
 ]
-TESTING = "test" in sys.argv
-
-if not TESTING:
+if DEBUG:
     INSTALLED_APPS = [
         *INSTALLED_APPS,
         "debug_toolbar",

@@ -1,5 +1,4 @@
 from django.urls import path
-from django.conf import settings
 
 from . import views
 
@@ -39,10 +38,3 @@ urlpatterns = [
     ),
     path("yaml", views.upload_file, name="upload_yaml"),
 ]
-
-if not settings.TESTING:
-    from debug_toolbar.toolbar import debug_toolbar_urls
-
-    urlpatterns = [
-        *urlpatterns,
-    ] + debug_toolbar_urls()

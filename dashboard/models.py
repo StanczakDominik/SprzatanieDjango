@@ -46,7 +46,7 @@ class Execution(models.Model):
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
 
     def __str__(self, *args, **kwargs):
-        output = f"{self.activity.activity_name} done at {self.execution_date.strftime("%Y-%m-%d")}"
+        output = f"{self.activity.activity_name} done at {self.execution_date.strftime('%Y-%m-%d')}"
         if self.executed_by is None:
             by = ""
         elif self.executed_by.first_name:
