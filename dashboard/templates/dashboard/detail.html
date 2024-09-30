@@ -7,6 +7,7 @@
 Started {{ activity.date_created }}, expected to do every {{ activity.expected_period }}
 </p>
 
+<form action="{% url 'dashboard:execute_activity' activity.id %}" method="post">
 {% csrf_token %}
 <input type="submit" value="Do">
 </form>
@@ -20,7 +21,6 @@ Started {{ activity.date_created }}, expected to do every {{ activity.expected_p
 {% endfor %}
 </ul>
 
-<form action="{% url 'dashboard:execute_activity' activity.id %}" method="post">
 
 <p>
 <a href={% url 'dashboard:update_activity' activity.id %}>Edit</a> or <a href={% url 'dashboard:delete_activity' activity.id %}>delete</a> this activity?
