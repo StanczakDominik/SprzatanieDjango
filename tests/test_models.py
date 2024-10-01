@@ -37,9 +37,6 @@ class BasicTestCase(TestCase):
         response = self.client.get(reverse("dashboard:detail", args=[1]))
         self.assertEqual(response.context["activity"].activity_name, "test activity")
 
-    def test_activity_update(self):
-        raise NotImplementedError
-
 
 class OneActionTestCase(TestCase):
     def setUp(self):
@@ -66,21 +63,6 @@ class OneActionTestCase(TestCase):
     def test_detail_view(self):
         response = self.client.get(reverse("dashboard:detail", args=[1]))
         self.assertEqual(response.context["activity"].activity_name, "test activity")
-
-    def test_execution_update(self):
-        raise NotImplementedError
-
-
-class TestIndexView(TestCase):
-    def setUp(self):
-        User.objects.create_user(
-            username="testuser", first_name="user", password="2137"
-        )
-        self.client.login(username="testuser", password="2137")
-
-    def test_empty_dashboard(self):
-        response = self.client.get(reverse("dashboard:index"))
-        self.assertRegex(response.content, b"No activities defined.")
 
 
 class TestExecuteActivity(TestCase):

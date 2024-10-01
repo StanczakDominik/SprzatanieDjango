@@ -44,28 +44,18 @@ path = "dashboard/__about__.py"
 [tool.hatch.envs.default]
 installer = "uv"
 
+[tool.hatch.envs.default.scripts]
+serve = "python manage.py runserver"
+
 [tool.hatch.envs.prod]
 python = "3.10"
-
 [tool.hatch.envs.prod.env-vars]
 DJANGO_DEBUG = 'False'
-
-[tool.hatch.envs.prod.scripts]
-serve = "python manage.py runserver"
-
-[tool.hatch.envs.dev]
-python = "3.10"
-extra-dependencies = [
-    "django-debug-toolbar",
-]
-
-[tool.hatch.envs.dev.scripts]
-serve = "python manage.py runserver"
 
 
 [tool.hatch.envs.test]
 extra-dependencies = [
-    "pytest","pytest-django", "pytest-cov", "django-debug-toolbar", "pytest-watcher"
+    "pytest","pytest-django", "pytest-cov", "django-debug-toolbar", "pytest-watcher", "pytest-pudb"
 ]
 
 [tool.hatch.envs.test.scripts]
@@ -73,9 +63,6 @@ test = "pytest -vv --cov --cov-report=term-missing"
 test-watch = "ptw . --delay 0.2 -vv --cov"
 coverage = "ptw .coverage --runner coverage html"
 
-# [tool.hatch.envs.test.env-vars]
-# DJANGO_DEBUG = 'True'
-#
 [[tool.hatch.envs.test.matrix]]
 python = ["3.10", "3.12"]
 

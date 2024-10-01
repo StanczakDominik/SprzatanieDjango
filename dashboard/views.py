@@ -15,7 +15,7 @@ class IndexView(LoginRequiredMixin, generic.ListView):
     template_name = "dashboard/index.html"
     context_object_name = "activities"
 
-    def get_queryset(self, *args, **kwargs):
+    def get_queryset(self):
         try:
             cutoff = float(self.request.GET.get("priority", 1))
         except ValueError:
