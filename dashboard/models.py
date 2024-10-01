@@ -52,5 +52,5 @@ class Execution(models.Model):
         elif self.executed_by.first_name:
             by = f" by {self.executed_by.first_name}"
         else:
-            f" by {self.executed_by.nickname}"
+            by = f" by {self.executed_by.username}"
         return output + by

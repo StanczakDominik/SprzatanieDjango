@@ -47,7 +47,7 @@ class OneActionTestCase(TestCase):
             activity_name="test activity", expected_period=timedelta(days=3)
         )
         user = User.objects.create_user(
-            username="testuser", first_name="user", password="2137"
+            username="testuser", first_name="User", password="2137"
         )
         self.client.login(username="testuser", password="2137")
         activity.execute(user)
@@ -59,7 +59,9 @@ class OneActionTestCase(TestCase):
 
     def test_execution_str(self):
         execution = Execution.objects.get(id=1)
-        self.assertRegex(str(execution), r"test activity done at .* by user")
+        self.assertRegex(str(execution), r"test activity done at .* by User")
+        execution.executed_by = None
+        self.assertRegex(str(execution), r"test activity done at .*$")
 
     def test_detail_view(self):
         response = self.client.get(reverse("dashboard:detail", args=[1]))
@@ -86,10 +88,10 @@ class TestExecuteActivity(TestCase):
         Activity.objects.create(
             activity_name="test activity", expected_period=timedelta(days=3)
         )
-        User.objects.create_user(
-            username="testuser", first_name="user", password="2137"
-        )
+        User.objects.create_user(username="testuser", password="2137")
         self.client.login(username="testuser", password="2137")
 
     def test_execute_activity(self):
         self.client.post(reverse("dashboard:execute_activity", args=(1,)))
+        execution = Execution.objects.get(id=1)
+        self.assertRegex(str(execution), r"test activity done at .* by testuser")
