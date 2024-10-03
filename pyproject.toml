@@ -94,6 +94,7 @@ omit = [
   "sprzatanie/urls.py"
 ]
 fail_under = 100
+#skip_covered = true
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "sprzatanie.settings"

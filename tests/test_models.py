@@ -77,3 +77,20 @@ class TestExecuteActivity(TestCase):
         self.client.post(reverse("dashboard:execute_activity", args=(1,)))
         execution = Execution.objects.get(id=1)
         self.assertRegex(str(execution), r"test activity done at .* by testuser")
+
+    def test_delete_execution(self):
+        self.client.post(reverse("dashboard:execute_activity", args=(1,)))
+        execution = Execution.objects.get()
+        self.client.post(reverse("dashboard:delete_execution", args=(execution.id,)))
+
+
+class TestDeleteActivity(TestCase):
+    def setUp(self):
+        Activity.objects.create(
+            activity_name="test activity", expected_period=timedelta(days=3)
+        )
+        User.objects.create_user(username="testuser", password="2137")
+        self.client.login(username="testuser", password="2137")
+
+    def test_delete_activity(self):
+        self.client.post(reverse("dashboard:delete_activity", args=(1,)))

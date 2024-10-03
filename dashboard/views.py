@@ -66,14 +66,6 @@ class ActivityDeleteView(LoginRequiredMixin, generic.DeleteView):
         return reverse("dashboard:index")
 
 
-class ExecutionCreateView(LoginRequiredMixin, generic.CreateView):
-    model = Execution
-    fields = ["executed_by"]
-
-    def get_success_url(self):
-        return reverse("dashboard:detail", args=[self.object.activity.id])
-
-
 class ExecutionDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Execution
     fields = ["executed_by"]
@@ -84,7 +76,7 @@ class ExecutionDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 class ExecutionUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Execution
-    fields = ["executed_by"]
+    fields = ["executed_by", "execution_date"]
 
     def get_success_url(self):
         return reverse("dashboard:detail", args=[self.object.activity.id])
@@ -96,7 +88,7 @@ def parse_period(period):
     elif period.endswith("d"):
         return timedelta(days=int(period.strip("d")))
     else:
-        raise NotImplementedError
+        raise ValueError(f"Period must be d for days or w for weeks and not `{period}`")
 
 
 def handle_uploaded_file(f):
@@ -104,13 +96,13 @@ def handle_uploaded_file(f):
     for activity_name, activity_dict in d.items():
         activity_period = parse_period(activity_dict["period"])
         if existing_activities := Activity.objects.filter(
-            activity_name=activity_name, expected_period=activity_period
+            activity_name=activity_name,
         ):
             activity = existing_activities.get()
-            if activity.expected_period == activity_period:
-                pass
-            else:
-                breakpoint()
+            if activity.expected_period != activity_period:
+                raise ValueError(
+                    f"Mismatch on expected period of {activity.activity_name}"
+                )  # TODO how to handle this, actually?
         else:
             activity = Activity(
                 activity_name=activity_name, expected_period=activity_period
