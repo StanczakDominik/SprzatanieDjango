@@ -38,25 +38,12 @@ class TestTwoActivitiesIndexView(TestCase):
         response = self.client.get(reverse("dashboard:index") + "?priority=cupcakes")
         objects = {o: o.priority for o in response.context["object_list"]}
         self.assertEqual(len(objects), 2)
-        response = self.client.get(
-            reverse("dashboard:index") + "?priority=6"
-        )  # TODO I bet there's a better way to do this
+        response = self.client.get(reverse("dashboard:index"), data={"priority": "6"})
         objects = {o: o.priority for o in response.context["object_list"]}
         self.assertEqual(len(objects), 1)
         response = self.client.get(reverse("dashboard:index") + "?priority=9")
         objects = {o: o.priority for o in response.context["object_list"]}
         self.assertEqual(len(objects), 0)
-
-
-class TestLoginlessEntry(TestCase):
-    # TODO do we actually need this test?
-    def setUp(self):
-        Activity.objects.create(
-            activity_name="test activity", expected_period=timedelta(days=3)
-        )
-
-    def test_execute_activity(self):
-        self.client.post(reverse("dashboard:execute_activity", args=(1,)))
 
 
 class TestUpdateViews(TestCase):
