@@ -8,8 +8,6 @@
     Hi, {{ user.username }}!
 </p>
 
-{% if activities %}
-
 <div>
     <form>
         <label for="priority">Priority cut-off:</label>
@@ -17,6 +15,8 @@
         <input id="filter-btn" type="submit" value="Filter">
     </form>
 </div>
+{% if activities %}
+
 
     <table>
     <tr>
@@ -48,7 +48,7 @@
     {% endfor %}
     </table>
 {% else %}
-    <p>No activities defined.</p>
+<p>No activities found at the current priority cutoff value. Try a lower one? </p>
 {% endif %}
 </main>
 

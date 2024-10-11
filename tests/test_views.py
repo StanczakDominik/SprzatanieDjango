@@ -14,7 +14,10 @@ class TestIndexView(TestCase):
 
     def test_empty_dashboard(self):
         response = self.client.get(reverse("dashboard:index"))
-        self.assertRegex(response.content, b"No activities defined.")
+        self.assertRegex(
+            response.content,
+            b"No activities found at the current priority cutoff value. Try a lower one?",
+        )
 
 
 class TestTwoActivitiesIndexView(TestCase):

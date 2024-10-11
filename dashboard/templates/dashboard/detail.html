@@ -35,4 +35,6 @@
 </main>
 <footer>
 <a href={% url 'dashboard:update_activity' activity.id %}>Edit</a> or <a href={% url 'dashboard:delete_activity' activity.id %}>delete</a> this activity?
+<br/>
+<a href={% url 'dashboard:index' %}>Return to dashboard.</a>
 </footer>
