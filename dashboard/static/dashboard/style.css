@@ -16,3 +16,10 @@ th {
 #expected_period {
     color: blue;
 }
+td form {
+    margin: 0;
+}
+td form input .button {
+   display: block;
+   margin: 0;
+}

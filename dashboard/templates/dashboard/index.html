@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="{% static 'dashboard/style.css' %}">
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 
-{% if user.is_authenticated %}
+<main>
 <p>
     Hi, {{ user.username }}!
 </p>
@@ -25,6 +25,7 @@
         <th>Ostatnio</th>
         <th>Ile wpisów</th>
         <th>Priorytet</th>
+        <th></th>
     </tr>
     {% for activity in activities %}
     <tr>
@@ -37,16 +38,22 @@
         <td id="last_execution_date"> {{ activity.last_entry.execution_date | date:"Y-m-d" }} </td>
         <td id="execution_count"> {{ activity.execution_set.count }} </td>
         <td id="priority"> {{ activity.priority | floatformat:-1 }} </td>
+        <td id="done_button">
+            <form type="hidden" action="{% url 'dashboard:execute_activity' activity.id %}" method="post">
+                {% csrf_token %}
+                <input class="button" type="submit" value="Do">
+            </form>
+        </td>
     </tr>
     {% endfor %}
     </table>
 {% else %}
     <p>No activities defined.</p>
 {% endif %}
+</main>
 
-<p>
+<footer>
     <a href="{% url 'dashboard:create_activity' %}">Create an activity?</a>
     <a href="{% url 'dashboard:upload_yaml' %}">Upload YAML?</a>
     </p>
-
-{%endif %}
+</footer>

@@ -1,23 +1,25 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'dashboard/style.css' %}">
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
-<h1>{{ activity.activity_name }}</h1>
+<header>
+    <h1>{{ activity.activity_name }}</h1>
+</header>
 
-<p>
-Started {{ activity.date_created }}, expected to do every {{ activity.expected_period }}
-</p>
+<main>
+    <p class="notice">
+    Started {{ activity.date_created }}, expected to do every {{ activity.expected_period }}
+    </p>
 
 {% if activity.notes %}
-    <h2>Notes</h2>
-    <div>
-        {{activity.notes}}
-    </div>
+<aside>
+    {{activity.notes}}
+</aside>
 {% endif %}
 
 
 <form action="{% url 'dashboard:execute_activity' activity.id %}" method="post">
 {% csrf_token %}
-<input type="submit" value="Do">
+<input class="button" type="submit" value="Do">
 </form>
 
 <ul>
@@ -30,6 +32,7 @@ Started {{ activity.date_created }}, expected to do every {{ activity.expected_p
 </ul>
 
 
-<p>
+</main>
+<footer>
 <a href={% url 'dashboard:update_activity' activity.id %}>Edit</a> or <a href={% url 'dashboard:delete_activity' activity.id %}>delete</a> this activity?
-</p>
+</footer>
