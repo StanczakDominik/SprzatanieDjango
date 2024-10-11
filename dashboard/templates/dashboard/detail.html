@@ -7,6 +7,14 @@
 Started {{ activity.date_created }}, expected to do every {{ activity.expected_period }}
 </p>
 
+{% if activity.notes %}
+    <h2>Notes</h2>
+    <div>
+        {{activity.notes}}
+    </div>
+{% endif %}
+
+
 <form action="{% url 'dashboard:execute_activity' activity.id %}" method="post">
 {% csrf_token %}
 <input type="submit" value="Do">

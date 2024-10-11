@@ -67,6 +67,7 @@ class TestUpdateViews(TestCase):
             {
                 "activity_name": self.activity.activity_name,
                 "expected_period": timedelta(days=2),
+                "notes": "What a silly place… It's stuffed! So it's not real for now? I don't think it has started yet.",
             },
         )
         self.assertEqual(response.status_code, 302)

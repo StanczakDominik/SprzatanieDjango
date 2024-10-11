@@ -7,6 +7,7 @@ class Activity(models.Model):
     activity_name = models.CharField(max_length=200)
     date_created = models.DateField("date created", default=date.today, null=False)
     expected_period = models.DurationField("expected period")
+    notes = models.TextField("Notes or description of the activity", default="")
 
     @property
     def last_entry(self):

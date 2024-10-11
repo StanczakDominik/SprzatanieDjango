@@ -46,13 +46,13 @@ def execute_activity(request, activity_id):
 
 class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
     model = Activity
-    fields = ["activity_name", "expected_period"]
+    fields = ["activity_name", "expected_period", "notes"]
     success_url = reverse_lazy("dashboard:index")
 
 
 class ActivityUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Activity
-    fields = ["activity_name", "expected_period"]
+    fields = ["activity_name", "expected_period", "notes"]
 
     def get_success_url(self):
         return reverse("dashboard:detail", args=[self.object.id])
@@ -60,7 +60,7 @@ class ActivityUpdateView(LoginRequiredMixin, generic.UpdateView):
 
 class ActivityDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Activity
-    fields = ["activity_name", "expected_period"]
+    # fields = ["activity_name", "expected_period", "notes"]
 
     def get_success_url(self):
         return reverse("dashboard:index")
@@ -68,7 +68,7 @@ class ActivityDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 class ExecutionDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Execution
-    fields = ["executed_by"]
+    # fields = ["executed_by"]
 
     def get_success_url(self):
         return reverse("dashboard:detail", args=[self.object.activity.id])
