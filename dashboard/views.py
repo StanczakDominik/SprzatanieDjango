@@ -41,7 +41,7 @@ def execute_activity(request, activity_id):
     activity = get_object_or_404(Activity, pk=activity_id)
     execution = Execution(executed_by=request.user, activity=activity)
     execution.save()
-    return HttpResponseRedirect(reverse_lazy("dashboard:detail", args=[activity_id]))
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
 
 
 class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
