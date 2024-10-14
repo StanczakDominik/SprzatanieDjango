@@ -15,20 +15,28 @@ class IndexView(LoginRequiredMixin, generic.ListView):
     template_name = "dashboard/index.html"
     context_object_name = "activities"
 
-    def get_queryset(self):
+    @property
+    def cutoff(self):
         try:
             cutoff = float(self.request.GET.get("priority", 1))
         except ValueError:
             cutoff = 1.0
+        return cutoff
 
+    def get_queryset(self):
         activities = Activity.objects.order_by("-date_created")
         activities = list(
-            filter(lambda activity: activity.priority >= cutoff, activities)
+            filter(lambda activity: activity.priority >= self.cutoff, activities)
         )
         activities = sorted(
             activities, key=lambda activity: activity.priority, reverse=True
         )
         return activities
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["priority"] = self.cutoff
+        return context
 
 
 class DetailView(LoginRequiredMixin, generic.DetailView):
