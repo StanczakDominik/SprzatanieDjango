@@ -31,6 +31,7 @@ dependencies = [
     "dj-database-url",
     "gunicorn", # TODO should this be defined here?
     "whitenoise",
+    "humanize",
     ]
 
 [project.urls]
