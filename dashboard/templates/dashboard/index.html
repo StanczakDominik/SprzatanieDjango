@@ -4,9 +4,6 @@
 <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
 
 <main>
-<p>
-    Hi, {{ user.username }}!
-</p>
 
 <div>
     <form>
@@ -53,7 +50,7 @@
 </main>
 
 <footer>
+    Logged in as {{ user.username }}</br>
     <a href="{% url 'dashboard:create_activity' %}">Create an activity?</a>
     <a href="{% url 'dashboard:upload_yaml' %}">Upload YAML?</a>
-    </p>
 </footer>
