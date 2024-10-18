@@ -83,7 +83,7 @@ class TestUpdateViews(TestCase):
         response = self.client.post(
             reverse("dashboard:update_execution", args=(1,)),
             {
-                "executed_by": "",
+                "executed_by": [],
                 "activity": execution.activity,
                 "execution_date": execution.execution_date,
             },
@@ -91,4 +91,4 @@ class TestUpdateViews(TestCase):
         self.assertEqual(response.status_code, 302)
 
         execution.refresh_from_db()
-        self.assertIsNone(execution.executed_by)
+        self.assertFalse(execution.executed_by.exists())

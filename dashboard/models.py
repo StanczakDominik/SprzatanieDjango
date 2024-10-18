@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import date
 from django.contrib.auth.models import User
+import humanize
 
 
 class Activity(models.Model):
@@ -36,22 +37,23 @@ class Activity(models.Model):
         return self.execution_set.order_by("-execution_date")
 
     def execute(self, participant: User):
-        Execution.objects.create(executed_by=participant, activity=self)
+        ex = Execution.objects.create(activity=self)
+        ex.executed_by.add(participant)
+        ex.save()
 
 
 class Execution(models.Model):
     execution_date = models.DateField("date done", default=date.today)
-    executed_by = models.ForeignKey(
-        User, on_delete=models.CASCADE, blank=True, null=True
-    )
+    executed_by = models.ManyToManyField(User, blank=True)
     activity = models.ForeignKey(Activity, on_delete=models.CASCADE)
 
     def __str__(self, *args, **kwargs):
         output = f"{self.activity.activity_name} done at {self.execution_date.strftime('%Y-%m-%d')}"
-        if self.executed_by is None:
-            by = ""
-        elif self.executed_by.first_name:
-            by = f" by {self.executed_by.first_name}"
-        else:
-            by = f" by {self.executed_by.username}"
-        return output + by
+        if users := self.executed_by.all():
+            output += " by " + humanize.natural_list(
+                [
+                    user.first_name if user.first_name else user.username
+                    for user in users
+                ]
+            )
+        return output

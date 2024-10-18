@@ -57,7 +57,7 @@ class OneActionTestCase(TestCase):
     def test_execution_str(self):
         execution = Execution.objects.get(id=1)
         self.assertRegex(str(execution), r"test activity done at .* by User")
-        execution.executed_by = None
+        execution.executed_by.set([])
         self.assertRegex(str(execution), r"test activity done at .*$")
 
     def test_detail_view(self):

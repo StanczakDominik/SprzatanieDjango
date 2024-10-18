@@ -47,8 +47,7 @@ class DetailView(LoginRequiredMixin, generic.DetailView):
 @login_required
 def execute_activity(request, activity_id):
     activity = get_object_or_404(Activity, pk=activity_id)
-    execution = Execution(executed_by=request.user, activity=activity)
-    execution.save()
+    activity.execute(request.user)
     return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
 
 
@@ -121,7 +120,8 @@ def handle_uploaded_file(f):
         for date in activity_dict["dates"]:
             if not Execution.objects.filter(activity=activity, execution_date=date):
                 execution = Execution(
-                    execution_date=date, activity=activity, executed_by=None
+                    execution_date=date,
+                    activity=activity,
                 )
                 executions.append(execution)
 
