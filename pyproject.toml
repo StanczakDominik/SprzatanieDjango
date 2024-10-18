@@ -74,6 +74,7 @@ branch = true
 parallel = true
 omit = [
   "dashboard/__about__.py",
+  "dashboard/migrations/*",
   "sprzatanie/asgi.py",
   "sprzatanie/wsgi.py",
   "sprzatanie/urls.py",
@@ -92,7 +93,8 @@ exclude_lines = [
   "if TYPE_CHECKING:",
 ]
 omit = [
-  "sprzatanie/urls.py"
+  "sprzatanie/urls.py",
+  "dashboard/migrations/*"
 ]
 fail_under = 100
 #skip_covered = true
