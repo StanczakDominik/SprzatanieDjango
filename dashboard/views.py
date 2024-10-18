@@ -73,6 +73,14 @@ class ActivityDeleteView(LoginRequiredMixin, generic.DeleteView):
         return reverse("dashboard:index")
 
 
+class ExecutionCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Execution
+    fields = ["activity", "execution_date", "executed_by"]
+
+    def get_success_url(self):
+        return reverse("dashboard:detail", args=[self.object.activity.id])
+
+
 class ExecutionDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Execution
     # fields = ["executed_by"]
@@ -83,7 +91,7 @@ class ExecutionDeleteView(LoginRequiredMixin, generic.DeleteView):
 
 class ExecutionUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Execution
-    fields = ["executed_by", "execution_date"]
+    fields = ["execution_date", "executed_by"]
 
     def get_success_url(self):
         return reverse("dashboard:detail", args=[self.object.activity.id])

@@ -24,6 +24,9 @@ urlpatterns = [
         name="update_activity",
     ),
     path(
+        "execution/create", views.ExecutionCreateView.as_view(), name="create_execution"
+    ),
+    path(
         "execution/<int:pk>/update",
         views.ExecutionUpdateView.as_view(),
         name="update_execution",
