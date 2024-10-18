@@ -36,10 +36,20 @@
         <td id="execution_count"> {{ activity.execution_set.count }} </td>
         <td id="priority"> {{ activity.priority | floatformat:-1 }} </td>
         <td id="done_button">
+            <span id="button_bar">
             <form type="hidden" action="{% url 'dashboard:execute_activity' activity.id %}" method="post">
                 {% csrf_token %}
-                <input class="button" type="submit" value="Do">
+                <input class="button" type="submit" value="✅">
             </form>
+            <form type="hidden" action="{% url 'dashboard:execute_activity' activity.id %}" method="post">
+                {% csrf_token %}
+                <input class="button" type="submit" value="🧑‍🤝‍🧑">
+            </form>
+            <form type="hidden" action="{% url 'dashboard:execute_activity' activity.id %}" method="post">
+                {% csrf_token %}
+                <input class="button" type="submit" value="❔">
+            </form>
+            </span>
         </td>
     </tr>
     {% endfor %}

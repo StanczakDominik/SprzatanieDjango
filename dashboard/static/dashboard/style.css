@@ -23,3 +23,7 @@ td form input .button {
    display: block;
    margin: 0;
 }
+
+#button_bar {
+    display: flex;
+}

@@ -18,10 +18,20 @@
 {% endif %}
 
 
-<form action="{% url 'dashboard:execute_activity' activity.id %}" method="post">
-{% csrf_token %}
-<input class="button" type="submit" value="Do">
+<span id="button_bar">
+<form type="hidden" action="{% url 'dashboard:execute_activity' activity.id %}" method="post">
+    {% csrf_token %}
+    <input class="button" type="submit" value="✅">
 </form>
+<form type="hidden" action="{% url 'dashboard:execute_activity' activity.id %}" method="post">
+    {% csrf_token %}
+    <input class="button" type="submit" value="🧑‍🤝‍🧑">
+</form>
+<form type="hidden" action="{% url 'dashboard:execute_activity' activity.id %}" method="post">
+    {% csrf_token %}
+    <input class="button" type="submit" value="❔">
+</form>
+</span>
 
 <ul>
 {% for execution in activity.associated_executions_by_date %}
