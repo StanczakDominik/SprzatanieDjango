@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.urls import reverse
 from django.utils.timezone import now
 from dashboard.models import Activity, User, Execution
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 
 class TestIndexView(TestCase):
@@ -92,3 +92,42 @@ class TestUpdateViews(TestCase):
 
         execution.refresh_from_db()
         self.assertFalse(execution.executed_by.exists())
+
+
+class TestCreateViews(TestCase):
+    def setUp(self):
+        User.objects.create_user(
+            username="testuser", first_name="user", password="2137"
+        )
+        User.objects.create_user(
+            username="testuser2", first_name="user", password="2137"
+        )
+        self.client.login(username="testuser", password="2137")
+
+    def test_create_activity(self):
+        response = self.client.post(
+            reverse("dashboard:create_activity"),
+            {
+                "activity_name": "Test that activities get created",
+                "expected_period": timedelta(days=2),
+                "notes": "Did that work?",
+            },
+        )
+        self.assertEqual(response.status_code, 302)
+
+        activity = Activity.objects.get(id=1)
+        self.assertEqual(activity.expected_period.days, 2)
+
+        url = reverse("dashboard:create_execution")
+        response2 = self.client.post(
+            url,
+            {
+                "activity": activity.id,
+                "executed_by": [1, 2],
+                "execution_date": datetime.now().date(),
+            },
+        )
+
+        self.assertEqual(response2.status_code, 302)
+        execution = Execution.objects.get(id=1)
+        self.assertEqual(len(execution.executed_by.all()), 2)

@@ -72,11 +72,19 @@ class TestExecuteActivity(TestCase):
         )
         User.objects.create_user(username="testuser", password="2137")
         self.client.login(username="testuser", password="2137")
+        User.objects.create_user(username="testuser2", password="2137")
 
     def test_execute_activity(self):
         self.client.post(reverse("dashboard:execute_activity", args=(1,)))
         execution = Execution.objects.get(id=1)
         self.assertRegex(str(execution), r"test activity done at .* by testuser")
+
+    def test_execute_activity_team(self):
+        self.client.post(reverse("dashboard:execute_activity_team", args=(1,)))
+        execution = Execution.objects.get(id=1)
+        self.assertRegex(
+            str(execution), r"test activity done at .* by testuser and testuser2"
+        )
 
     def test_delete_execution(self):
         self.client.post(reverse("dashboard:execute_activity", args=(1,)))

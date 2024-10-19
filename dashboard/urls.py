@@ -12,6 +12,11 @@ urlpatterns = [
         views.execute_activity,
         name="execute_activity",
     ),
+    path(
+        "activity/<int:activity_id>/do_as_team/",
+        views.execute_activity_team,
+        name="execute_activity_team",
+    ),
     path("activity/create", views.ActivityCreateView.as_view(), name="create_activity"),
     path(
         "activity/<int:pk>/delete",
@@ -25,6 +30,11 @@ urlpatterns = [
     ),
     path(
         "execution/create", views.ExecutionCreateView.as_view(), name="create_execution"
+    ),
+    path(
+        "execution/create/<int:pk>",
+        views.ExecutionCreateView.as_view(),
+        name="create_execution",
     ),
     path(
         "execution/<int:pk>/update",

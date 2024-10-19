@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models.query import QuerySet
 from datetime import date
 from django.contrib.auth.models import User
 import humanize
@@ -36,9 +37,12 @@ class Activity(models.Model):
     def associated_executions_by_date(self):
         return self.execution_set.order_by("-execution_date")
 
-    def execute(self, participant: User):
+    def execute(self, participant: User | list[User]):
         ex = Execution.objects.create(activity=self)
-        ex.executed_by.add(participant)
+        if not isinstance(participant, QuerySet):
+            participant = [participant]
+        for p in participant:
+            ex.executed_by.add(p)
         ex.save()
 
 

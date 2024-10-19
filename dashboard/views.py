@@ -1,11 +1,12 @@
 from .models import Activity, Execution
-from datetime import timedelta
+from datetime import timedelta, date
 
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 from django.urls import reverse_lazy, reverse
 from .forms import UploadFileForm
 import yaml
@@ -51,6 +52,13 @@ def execute_activity(request, activity_id):
     return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
 
 
+@login_required
+def execute_activity_team(request, activity_id):
+    activity = get_object_or_404(Activity, pk=activity_id)
+    activity.execute(User.objects.all())
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
+
+
 class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
     model = Activity
     fields = ["activity_name", "expected_period", "notes"]
@@ -79,6 +87,15 @@ class ExecutionCreateView(LoginRequiredMixin, generic.CreateView):
 
     def get_success_url(self):
         return reverse("dashboard:detail", args=[self.object.activity.id])
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial["execution_date"] = date.today()
+        if (
+            "pk" in self.kwargs
+        ):  # no cov - TODO I don't know how to test it without doing something like selenium
+            initial["activity"] = Activity.objects.get(pk=self.kwargs["pk"]).id
+        return initial
 
 
 class ExecutionDeleteView(LoginRequiredMixin, generic.DeleteView):
@@ -125,10 +142,12 @@ def handle_uploaded_file(f):
             activity.save()
 
         executions = []
-        for date in activity_dict["dates"]:
-            if not Execution.objects.filter(activity=activity, execution_date=date):
+        for execution_date in activity_dict["dates"]:
+            if not Execution.objects.filter(
+                activity=activity, execution_date=execution_date
+            ):
                 execution = Execution(
-                    execution_date=date,
+                    execution_date=execution_date,
                     activity=activity,
                 )
                 executions.append(execution)
