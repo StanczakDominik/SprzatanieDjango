@@ -32,6 +32,7 @@ dependencies = [
     "gunicorn", # TODO should this be defined here?
     "whitenoise",
     "humanize",
+    "docutils",
     ]
 
 [project.urls]
