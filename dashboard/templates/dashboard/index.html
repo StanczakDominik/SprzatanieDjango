@@ -64,5 +64,8 @@
 <footer>
     Logged in as {{ user.username }}</br>
     <a href="{% url 'dashboard:create_activity' %}">Create an activity?</a>
-    <a href="{% url 'dashboard:upload_yaml' %}">Upload YAML?</a>
+    <a href="{% url 'dashboard:upload_yaml' %}">Upload YAML?</a></br>
+    {% if activities %}
+      <a href="{% url 'dashboard:detail' lucky.id %}">Feelin' lucky?</a>
+    {% endif %}
 </footer>

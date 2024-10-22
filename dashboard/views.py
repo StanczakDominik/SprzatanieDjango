@@ -10,6 +10,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse_lazy, reverse
 from .forms import UploadFileForm
 import yaml
+import random
 
 
 class IndexView(LoginRequiredMixin, generic.ListView):
@@ -34,9 +35,17 @@ class IndexView(LoginRequiredMixin, generic.ListView):
         )
         return activities
 
+    def feeling_lucky(self) -> Activity | None:
+        activities = Activity.objects.all()
+        if not activities:
+            return None
+        priorities = [activity.priority for activity in activities]
+        return random.choices(activities, weights=priorities)[0]
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["priority"] = self.cutoff
+        context["lucky"] = self.feeling_lucky()
         return context
 
 
