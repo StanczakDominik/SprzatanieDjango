@@ -5,6 +5,14 @@ from django.contrib.auth.models import User
 import humanize
 
 
+class Dashboard(models.Model):
+    slug = models.CharField(max_length=20, primary_key=True)
+    name = models.CharField(max_length=200)
+    # TODO default activity parameters
+
+    # TODO group = Group()?
+
+
 class Activity(models.Model):
     activity_name = models.CharField(max_length=200)
     date_created = models.DateField("date created", default=date.today, null=False)
@@ -13,6 +21,7 @@ class Activity(models.Model):
         "Notes or description of the activity", default="", blank=True
     )
 
+    dashboard = models.ForeignKey(Dashboard, on_delete=models.CASCADE)
     EXECUTION_LIMIT = 10
 
     @property
