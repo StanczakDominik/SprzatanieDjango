@@ -16,6 +16,7 @@ import random
 class IndexView(LoginRequiredMixin, generic.ListView):
     template_name = "dashboard/index.html"
     context_object_name = "activities"
+    model = Activity
 
     @property
     def cutoff(self):
@@ -36,7 +37,7 @@ class IndexView(LoginRequiredMixin, generic.ListView):
         return activities
 
     def feeling_lucky(self) -> Activity | None:
-        activities = Activity.objects.all()
+        activities = self.model.objects.all()
         if not activities:
             return None
         priorities = [activity.priority for activity in activities]
