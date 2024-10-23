@@ -1,4 +1,4 @@
-from .models import Activity, Execution
+from .models import Activity, Execution, Dashboard
 from datetime import timedelta, date
 
 from django.http import HttpResponseRedirect
@@ -26,8 +26,11 @@ class IndexView(LoginRequiredMixin, generic.ListView):
             cutoff = 1.0
         return cutoff
 
-    def get_queryset(self):
-        activities = Activity.objects.order_by("-date_created")
+    def get_queryset(self, **kwargs):
+        # queryset = super().get_queryset()
+        d = Dashboard.objects.get(slug=self.kwargs["slug"])
+        activities = d.activity_set.all()
+        # priority is a property so I can't just .filter(priority__gte = self.cutoff)
         activities = list(
             filter(lambda activity: activity.priority >= self.cutoff, activities)
         )
@@ -45,6 +48,7 @@ class IndexView(LoginRequiredMixin, generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["dashboard"] = Dashboard.objects.get(slug=self.kwargs["slug"])
         context["priority"] = self.cutoff
         context["lucky"] = self.feeling_lucky()
         return context
