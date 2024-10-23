@@ -13,6 +13,8 @@ class Activity(models.Model):
         "Notes or description of the activity", default="", blank=True
     )
 
+    EXECUTION_LIMIT = 10
+
     @property
     def last_entry(self):
         try:
@@ -37,7 +39,11 @@ class Activity(models.Model):
 
     @property
     def associated_executions_by_date(self):
-        return self.execution_set.order_by("-execution_date")
+        return self.execution_set.order_by("-execution_date")[: self.EXECUTION_LIMIT]
+
+    @property
+    def associated_executions_by_date_more(self):
+        return self.execution_set.order_by("-execution_date")[self.EXECUTION_LIMIT :]
 
     def execute(self, participant: User | list[User]):
         ex = Execution.objects.create(activity=self)

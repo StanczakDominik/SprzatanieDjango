@@ -41,6 +41,21 @@
 {% endfor %}
 </ul>
 
+{% if activity.associated_executions_by_date_more %}
+  <details>
+  <summary> {{ activity.associated_executions_by_date_more | length }} more...</summary>
+
+<ul>
+{% for execution in activity.associated_executions_by_date_more %}
+<li> {{ execution }}
+    <a href="{% url 'dashboard:update_execution' execution.id %}">(edit)</a>
+    <a href="{% url 'dashboard:delete_execution' execution.id %}">(delete)</a>
+</li>
+{% endfor %}
+</ul>
+  </details>
+{% endif %}
+
 
 </main>
 <footer>
