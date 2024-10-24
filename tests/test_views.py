@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.utils.timezone import now
-from dashboard.models import Activity, User, Execution
+from dashboard.models import Activity, User, Execution, Dashboard
 from datetime import timedelta, datetime
 
 
@@ -26,11 +26,13 @@ class TestTwoActivitiesIndexView(TestCase):
             activity_name="test activity",
             expected_period=timedelta(days=1),
             date_created=now() - timedelta(days=4),
+            dashboard=Dashboard.objects.create(name="Test", slug="test"),
         )
         Activity.objects.create(
             activity_name="test activity 2",
             expected_period=timedelta(days=1),
             date_created=now() - timedelta(days=8),
+            dashboard=Dashboard.objects.create(name="Test", slug="test"),
         )
         User.objects.create_user(
             username="testuser", first_name="user", password="2137"
@@ -55,6 +57,7 @@ class TestUpdateViews(TestCase):
             activity_name="test activity",
             expected_period=timedelta(days=1),
             date_created=now() - timedelta(days=4),
+            dashboard=Dashboard.objects.create(name="Test", slug="test"),
         )
         User.objects.create_user(
             username="testuser", first_name="user", password="2137"
@@ -103,6 +106,7 @@ class TestCreateViews(TestCase):
             username="testuser2", first_name="user", password="2137"
         )
         self.client.login(username="testuser", password="2137")
+        self.dashboard = Dashboard.objects.create(name="Test", slug="test")
 
     def test_create_activity(self):
         response = self.client.post(
@@ -111,6 +115,7 @@ class TestCreateViews(TestCase):
                 "activity_name": "Test that activities get created",
                 "expected_period": timedelta(days=2),
                 "notes": "Did that work?",
+                "dashboard": self.dashboard.slug,
             },
         )
         self.assertEqual(response.status_code, 302)

@@ -1,16 +1,18 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.utils.timezone import now
-from dashboard.models import Activity, User, Execution
+from dashboard.models import Dashboard, Activity, User, Execution
 from datetime import timedelta
 
 
 class BasicTestCase(TestCase):
     def setUp(self):
+        dashboard = Dashboard.objects.create(name="Test", slug="test")
         Activity.objects.create(
             activity_name="test activity",
             expected_period=timedelta(days=1),
             date_created=now() - timedelta(days=4),
+            dashboard=dashboard,
         )
         User.objects.create_user(
             username="testuser", first_name="user", password="2137"
@@ -41,7 +43,9 @@ class BasicTestCase(TestCase):
 class OneActionTestCase(TestCase):
     def setUp(self):
         activity = Activity.objects.create(
-            activity_name="test activity", expected_period=timedelta(days=3)
+            activity_name="test activity",
+            expected_period=timedelta(days=3),
+            dashboard=Dashboard.objects.create(name="Test", slug="test"),
         )
         user = User.objects.create_user(
             username="testuser", first_name="User", password="2137"
@@ -68,7 +72,9 @@ class OneActionTestCase(TestCase):
 class TestExecuteActivity(TestCase):
     def setUp(self):
         Activity.objects.create(
-            activity_name="test activity", expected_period=timedelta(days=3)
+            activity_name="test activity",
+            expected_period=timedelta(days=3),
+            dashboard=Dashboard.objects.create(name="Test", slug="test"),
         )
         User.objects.create_user(username="testuser", password="2137")
         self.client.login(username="testuser", password="2137")
@@ -95,7 +101,9 @@ class TestExecuteActivity(TestCase):
 class TestDeleteActivity(TestCase):
     def setUp(self):
         Activity.objects.create(
-            activity_name="test activity", expected_period=timedelta(days=3)
+            activity_name="test activity",
+            expected_period=timedelta(days=3),
+            dashboard=Dashboard.objects.create(name="Test", slug="test"),
         )
         User.objects.create_user(username="testuser", password="2137")
         self.client.login(username="testuser", password="2137")

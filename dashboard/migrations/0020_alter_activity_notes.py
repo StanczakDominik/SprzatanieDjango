@@ -5,7 +5,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("dashboard", "0015_alter_execution_executed_by"),
+        ("dashboard", "0019_alter_activity_dashboard"),
     ]
 
     operations = [
