@@ -11,9 +11,10 @@ class TestIndexView(TestCase):
             username="testuser", first_name="user", password="2137"
         )
         self.client.login(username="testuser", password="2137")
+        self.dashboard=Dashboard.objects.create(name="Test", slug="test"),
 
     def test_empty_dashboard(self):
-        response = self.client.get(reverse("dashboard:index"))
+        response = self.client.get(reverse("dashboard:index", args=("test",)))
         self.assertRegex(
             response.content,
             b"No activities found at the current priority cutoff value. Try a lower one?",
@@ -22,17 +23,18 @@ class TestIndexView(TestCase):
 
 class TestTwoActivitiesIndexView(TestCase):
     def setUp(self):
+        dashboard = dashboard=Dashboard.objects.create(name="Test", slug="test")
         Activity.objects.create(
             activity_name="test activity",
             expected_period=timedelta(days=1),
             date_created=now() - timedelta(days=4),
-            dashboard=Dashboard.objects.create(name="Test", slug="test"),
+            dashboard = dashboard
         )
         Activity.objects.create(
             activity_name="test activity 2",
             expected_period=timedelta(days=1),
             date_created=now() - timedelta(days=8),
-            dashboard=Dashboard.objects.create(name="Test", slug="test"),
+            dashboard = dashboard
         )
         User.objects.create_user(
             username="testuser", first_name="user", password="2137"
@@ -40,13 +42,13 @@ class TestTwoActivitiesIndexView(TestCase):
         self.client.login(username="testuser", password="2137")
 
     def test_get_with_parameter(self):
-        response = self.client.get(reverse("dashboard:index") + "?priority=cupcakes")
+        response = self.client.get(reverse("dashboard:index", kwargs={"slug": "test"}) + "?priority=cupcakes")
         objects = {o: o.priority for o in response.context["object_list"]}
         self.assertEqual(len(objects), 2)
-        response = self.client.get(reverse("dashboard:index"), data={"priority": "6"})
+        response = self.client.get(reverse("dashboard:index", kwargs={"slug": "test"}), data={"priority": "6"})
         objects = {o: o.priority for o in response.context["object_list"]}
         self.assertEqual(len(objects), 1)
-        response = self.client.get(reverse("dashboard:index") + "?priority=9")
+        response = self.client.get(reverse("dashboard:index", kwargs={"slug": "test"}) + "?priority=9")
         objects = {o: o.priority for o in response.context["object_list"]}
         self.assertEqual(len(objects), 0)
 
@@ -109,6 +111,7 @@ class TestCreateViews(TestCase):
         self.dashboard = Dashboard.objects.create(name="Test", slug="test")
 
     def test_create_activity(self):
+        # test
         response = self.client.post(
             reverse("dashboard:create_activity"),
             {

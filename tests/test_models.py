@@ -95,6 +95,7 @@ class TestExecuteActivity(TestCase):
     def test_delete_execution(self):
         self.client.post(reverse("dashboard:execute_activity", args=(1,)))
         execution = Execution.objects.get()
+        assert execution is not None #test
         self.client.post(reverse("dashboard:delete_execution", args=(execution.id,)))
 
 

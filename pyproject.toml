@@ -32,7 +32,8 @@ dependencies = [
     "gunicorn", # TODO should this be defined here?
     "whitenoise",
     "humanize",
-    "docutils",
+    "docutils", # TODO move to dev
+    "django-stubs",# TODO move to dev
     ]
 
 [project.urls]

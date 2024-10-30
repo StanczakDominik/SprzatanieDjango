@@ -75,7 +75,7 @@ def execute_activity_team(request, activity_id):
 
 class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
     model = Activity
-    fields = ["activity_name", "expected_period", "notes"]
+    fields = ["activity_name", "expected_period", "notes", "dashboard"]
     success_url = reverse_lazy("dashboard:index")
 
 
