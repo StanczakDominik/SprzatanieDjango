@@ -7,12 +7,12 @@ from datetime import timedelta
 
 class BasicTestCase(TestCase):
     def setUp(self):
-        dashboard = Dashboard.objects.create(name="Test", slug="test")
+        self.dashboard = Dashboard.objects.create(name="Test", slug="test")
         Activity.objects.create(
             activity_name="test activity",
             expected_period=timedelta(days=1),
             date_created=now() - timedelta(days=4),
-            dashboard=dashboard,
+            dashboard=self.dashboard,
         )
         User.objects.create_user(
             username="testuser", first_name="user", password="2137"
@@ -32,7 +32,9 @@ class BasicTestCase(TestCase):
         self.assertEqual(activity.priority, 4.0)
 
     def test_activity_appears_on_dashboard(self):
-        response = self.client.get(reverse("dashboard:index"))
+        response = self.client.get(
+            reverse("dashboard:index", kwargs={"slug": self.dashboard.slug})
+        )
         self.assertEqual(len(list(response.context["activities"])), 1)
 
     def test_detail_view(self):
@@ -95,16 +97,17 @@ class TestExecuteActivity(TestCase):
     def test_delete_execution(self):
         self.client.post(reverse("dashboard:execute_activity", args=(1,)))
         execution = Execution.objects.get()
-        assert execution is not None #test
+        assert execution is not None  # test
         self.client.post(reverse("dashboard:delete_execution", args=(execution.id,)))
 
 
 class TestDeleteActivity(TestCase):
     def setUp(self):
+        self.dashboard = Dashboard.objects.create(name="Test", slug="test")
         Activity.objects.create(
             activity_name="test activity",
             expected_period=timedelta(days=3),
-            dashboard=Dashboard.objects.create(name="Test", slug="test"),
+            dashboard=self.dashboard,
         )
         User.objects.create_user(username="testuser", password="2137")
         self.client.login(username="testuser", password="2137")

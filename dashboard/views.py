@@ -7,7 +7,7 @@ from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
 from .forms import UploadFileForm
 import yaml
 import random
@@ -76,7 +76,9 @@ def execute_activity_team(request, activity_id):
 class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
     model = Activity
     fields = ["activity_name", "expected_period", "notes", "dashboard"]
-    success_url = reverse_lazy("dashboard:index")
+
+    def get_success_url(self):
+        return reverse("dashboard:index", args=[self.object.dashboard.slug])
 
 
 class ActivityUpdateView(LoginRequiredMixin, generic.UpdateView):
@@ -89,10 +91,9 @@ class ActivityUpdateView(LoginRequiredMixin, generic.UpdateView):
 
 class ActivityDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Activity
-    # fields = ["activity_name", "expected_period", "notes"]
 
     def get_success_url(self):
-        return reverse("dashboard:index")
+        return reverse("dashboard:index", args=[self.object.dashboard.slug])
 
 
 class ExecutionCreateView(LoginRequiredMixin, generic.CreateView):
@@ -137,12 +138,14 @@ def parse_period(period):
         raise ValueError(f"Period must be d for days or w for weeks and not `{period}`")
 
 
-def handle_uploaded_file(f):
+def handle_uploaded_file(f, dashboard_slug):
     d = yaml.load(f, Loader=yaml.FullLoader)
+    dashboard = Dashboard.objects.get(slug=dashboard_slug)
     for activity_name, activity_dict in d.items():
         activity_period = parse_period(activity_dict["period"])
         if existing_activities := Activity.objects.filter(
             activity_name=activity_name,
+            dashboard=dashboard,
         ):
             activity = existing_activities.get()
             if activity.expected_period != activity_period:
@@ -151,7 +154,9 @@ def handle_uploaded_file(f):
                 )  # TODO how to handle this, actually?
         else:
             activity = Activity(
-                activity_name=activity_name, expected_period=activity_period
+                activity_name=activity_name,
+                expected_period=activity_period,
+                dashboard=dashboard,
             )
             activity.save()
 
@@ -173,8 +178,10 @@ def upload_file(request):
     if request.method == "POST":
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
-            handle_uploaded_file(request.FILES["file"])
-            return HttpResponseRedirect(reverse("dashboard:index"))
+            handle_uploaded_file(request.FILES["file"], request.POST["dashboard"])
+            return HttpResponseRedirect(
+                reverse("dashboard:index", kwargs={"slug": request.POST["dashboard"]})
+            )
     else:
         form = UploadFileForm()
     return render(request, "dashboard/upload.html", {"form": form})

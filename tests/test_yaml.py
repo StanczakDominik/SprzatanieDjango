@@ -74,6 +74,7 @@ class TestUploadYaml(TestCase):
             self.post_a_string("But every test crashed when the Fire Nation attacked.")
 
     def test_yaml_upload_with_bad_period(self):
+        self.post_a_string(sample_yaml_with_bad_period)
         with self.assertRaises(ValueError):
             self.post_a_string(sample_yaml_with_bad_period)
 

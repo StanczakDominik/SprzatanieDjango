@@ -4,6 +4,7 @@ from . import views
 
 app_name = "dashboard"
 urlpatterns = [
+    path("yaml", views.upload_file, name="upload_yaml"),
     path("<slug:slug>", views.IndexView.as_view(), name="index"),
     path("activity/<int:pk>/", views.DetailView.as_view(), name="detail"),
     # path("<int:pk>/results/", views.ResultsView.as_view(), name="results"),
@@ -46,5 +47,4 @@ urlpatterns = [
         views.ExecutionDeleteView.as_view(),
         name="delete_execution",
     ),
-    path("yaml", views.upload_file, name="upload_yaml"),
 ]
