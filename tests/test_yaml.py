@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 from io import StringIO
+from dashboard.models import Dashboard, Activity
 
 sample_yaml = """
 unit testing:
@@ -53,16 +54,24 @@ tinkering with vim config:
 
 class TestUploadYaml(TestCase):
     def setUp(self):
+        self.dashboard = Dashboard.objects.create(name="Test", slug="test")
         self.client.login(username="testuser", password="2137")
 
     def post_a_string(self, s):
-        self.client.post(reverse("dashboard:upload_yaml"), {"file": StringIO(s)})
+        return self.client.post(
+            reverse("dashboard:upload_yaml"), {"file": StringIO(s), "dashboard": "test"}
+        )
 
     def test_yaml_upload(self):
-        self.post_a_string(sample_yaml)
+        response = self.post_a_string(sample_yaml)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Activity.objects.count(), 3)
 
     def test_yaml_upload_twice(self):
         self.post_a_string(sample_yaml)
+        response = self.post_a_string(sample_yaml)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(Activity.objects.count(), 3)
 
     def test_yaml_upload_with_mismatch(self):
         with self.assertRaises(ValueError):
@@ -74,7 +83,6 @@ class TestUploadYaml(TestCase):
             self.post_a_string("But every test crashed when the Fire Nation attacked.")
 
     def test_yaml_upload_with_bad_period(self):
-        self.post_a_string(sample_yaml_with_bad_period)
         with self.assertRaises(ValueError):
             self.post_a_string(sample_yaml_with_bad_period)
 

@@ -145,7 +145,6 @@ def handle_uploaded_file(f, dashboard_slug):
         activity_period = parse_period(activity_dict["period"])
         if existing_activities := Activity.objects.filter(
             activity_name=activity_name,
-            dashboard=dashboard,
         ):
             activity = existing_activities.get()
             if activity.expected_period != activity_period:
