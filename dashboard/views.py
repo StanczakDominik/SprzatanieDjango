@@ -73,6 +73,14 @@ def execute_activity_team(request, activity_id):
     return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
 
 
+class DashboardCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Dashboard
+    fields = ["slug", "name"]
+
+    def get_success_url(self):
+        return reverse("dashboard:index", args=[self.object.slug])
+
+
 class ActivityCreateView(LoginRequiredMixin, generic.CreateView):
     model = Activity
     fields = ["activity_name", "expected_period", "notes", "dashboard"]
