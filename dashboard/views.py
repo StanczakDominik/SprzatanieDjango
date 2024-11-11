@@ -1,22 +1,23 @@
-from .models import Activity, Execution, Dashboard
-from datetime import timedelta, date
+import random
+from datetime import date, timedelta
 
-from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
-from django.views import generic
+import yaml
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect
+from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
+from django.views import generic
+
 from .forms import UploadFileForm
-import yaml
-import random
+from .models import Activity, Dashboard, Execution
 
 
 class IndexView(LoginRequiredMixin, generic.ListView):
     template_name = "dashboard/index.html"
     context_object_name = "activities"
-    model = Activity
+    model = Dashboard
 
     @property
     def cutoff(self):
@@ -28,7 +29,7 @@ class IndexView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self, **kwargs):
         # queryset = super().get_queryset()
-        d = Dashboard.objects.get(slug=self.kwargs["slug"])
+        d = self.model.objects.get(slug=self.kwargs["slug"])
         activities = d.activity_set.all()
         # priority is a property so I can't just .filter(priority__gte = self.cutoff)
         activities = list(
@@ -40,7 +41,7 @@ class IndexView(LoginRequiredMixin, generic.ListView):
         return activities
 
     def feeling_lucky(self) -> Activity | None:
-        activities = self.model.objects.all()
+        activities = self.get_queryset()
         if not activities:
             return None
         priorities = [activity.priority for activity in activities]
@@ -48,7 +49,7 @@ class IndexView(LoginRequiredMixin, generic.ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["dashboard"] = Dashboard.objects.get(slug=self.kwargs["slug"])
+        context["dashboard"] = self.model.objects.get(slug=self.kwargs["slug"])
         context["priority"] = self.cutoff
         context["lucky"] = self.feeling_lucky()
         return context
