@@ -3,7 +3,7 @@ from datetime import date, timedelta
 
 import yaml
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
@@ -14,7 +14,7 @@ from .forms import UploadFileForm
 from .models import Activity, Dashboard, Execution
 
 
-class IndexView(LoginRequiredMixin, generic.ListView):
+class IndexView(LoginRequiredMixin, UserPassesTestMixin, generic.ListView):
     template_name = "dashboard/index.html"
     context_object_name = "activities"
     model = Dashboard
@@ -26,6 +26,11 @@ class IndexView(LoginRequiredMixin, generic.ListView):
         except ValueError:
             cutoff = 1.0
         return cutoff
+
+    def test_func(self):
+        return self.request.user.has_perm(
+            self.get_object().get_view_permission(self.request.user)
+        )
 
     def get_queryset(self, **kwargs):
         # queryset = super().get_queryset()

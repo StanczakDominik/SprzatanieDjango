@@ -1,16 +1,19 @@
+from datetime import date
+
+import humanize
+from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.query import QuerySet
-from datetime import date
-from django.contrib.auth.models import User
-import humanize
 
 
 class Dashboard(models.Model):
     slug = models.CharField(max_length=20, primary_key=True)
     name = models.CharField(max_length=200)
-    # TODO default activity parameters
 
-    # TODO group = Group()?
+    def get_view_permission(self, user):
+        return f"view_dashboard_{self.slug}"
+
+    # TODO default activity parameters
 
 
 class Activity(models.Model):
